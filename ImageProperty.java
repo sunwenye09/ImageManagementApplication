@@ -1,10 +1,12 @@
-package ImageManagement;
+package ImageModificationTool;
 
 import javafx.scene.text.Text;
-
 import java.util.HashMap;
 import javaxt.io.*;
 
+/**
+ * The ImageProperty class is responsible for storing and displaying image information.
+ */
 public class ImageProperty {
     private Image image;
     private String format;
@@ -22,38 +24,48 @@ public class ImageProperty {
     void setFormat(String format) {
         this.format = format;
     }
-    //strategy design pattern
+
+    /**
+     * retrieve the corresponding image information.
+     * @param text: JavaFX Text which is used to display one of the image properties.
+     * @return the corresponding image information in string format
+     */
     private String getProperty(Text text) {
-        if (text.getId().equalsIgnoreCase( "widthProperty")) {
+        String id = text.getId();
+        if (id.equalsIgnoreCase( "widthProperty")) {
             return String.valueOf(image.getWidth());
-        } else if (text.getId().equalsIgnoreCase( "heightProperty")) {
+        } else if (id.equalsIgnoreCase( "heightProperty")) {
             return String.valueOf(image.getHeight());
-        } else if (text.getId().equalsIgnoreCase( "date")) {
+        } else if (id.equalsIgnoreCase( "date")) {
             return String.valueOf(exif.get(0x0132));
-        } else if (text.getId().equalsIgnoreCase("camera")) {
+        } else if (id.equalsIgnoreCase("camera")) {
             return String.valueOf(exif.get(0x0110));
-        } else if (text.getId().equalsIgnoreCase("manufacturer")) {
+        } else if (id.equalsIgnoreCase("manufacturer")) {
             return String.valueOf(exif.get(0x010F));
-        } else if (text.getId().equalsIgnoreCase("focalLength")) {
+        } else if (id.equalsIgnoreCase("focalLength")) {
             return String.valueOf(exif.get(0x920A));
-        } else if (text.getId().equalsIgnoreCase("exposureTime")) {
+        } else if (id.equalsIgnoreCase("exposureTime")) {
             return String.valueOf(exif.get(0x829A));
-        } else if (text.getId().equalsIgnoreCase("ISOSpeedRatings")) {
+        } else if (id.equalsIgnoreCase("ISOSpeedRatings")) {
             return String.valueOf(exif.get(0x8827));
         } else {
-            System.out.println("Undefined image property: " + text.getId());
+            System.out.println("Undefined image property: " + id);
             return null;
         }
     }
+
+    /**
+     * display image properties on the graphical user interface.
+     * @param properties: a list of JavaFX Texts which are used to display image properties.
+     */
     public void displayProperty(Text[] properties) {
         for (int i = 0; i < properties.length; i++) {
             String property = getProperty(properties[i]);
             if (property.equalsIgnoreCase("null")) {
-                properties[i].setText("N/A");
+                properties[i].setText("No Info");
             } else {
                 properties[i].setText(property);
             }
         }
-
     }
 }

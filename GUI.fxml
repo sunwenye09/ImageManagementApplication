@@ -14,7 +14,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane prefHeight="600.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ImageManagement.Controller">
+<AnchorPane prefHeight="600.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ImageModificationTool.Controller">
    <children>
       <HBox prefHeight="530.0" prefWidth="600.0">
          <children>
@@ -131,7 +131,7 @@
       </HBox>
       <HBox layoutY="530.0" prefHeight="70.0" prefWidth="600.0">
          <children>
-            <Button mnemonicParsing="false" onAction="#uploadClick" prefHeight="32.0" prefWidth="110.0" text="Upload Image">
+            <Button mnemonicParsing="false" onAction="#upload" prefHeight="32.0" prefWidth="110.0" text="Upload Image">
                <HBox.margin>
                   <Insets left="90.0" top="10.0" />
                </HBox.margin></Button>

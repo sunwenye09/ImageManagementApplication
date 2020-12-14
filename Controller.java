@@ -1,22 +1,15 @@
-package ImageManagement;
-
+package ImageModificationTool;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.text.Text;
-import javafx.stage.FileChooser;
-
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
+import java.io.ByteArrayInputStream;
 
 public class Controller {
     @FXML
     private ImageView imageView;
-    /*@FXML
-    private RadioButton bmp, gif, jpe, jpeg, jpg, png, tif, tiff, wbmp;*/
     @FXML
     private Text widthProperty, heightProperty, date, camera, manufacturer, focalLength, exposureTime, ISOSpeedRatings;
     @FXML
@@ -24,105 +17,170 @@ public class Controller {
 
     private String uploadFile;
     private javaxt.io.Image image;
-    //Composite design pattern
-    private ImageProperty imageProperty;        //responsible for displaying image properties
+    //Command design pattern
+    private ImageProperty imageProperty;        //responsible for storing and displaying image properties
     private ImageModification modification;     //responsible for image modification
 
+    /**
+     * In response to "Upload Image" button: upload the selected image and set up the initialization.
+     */
     @FXML
-    public void uploadClick() {
-        FileChooser fileChooser = new FileChooser();
-        fileChooser.getExtensionFilters().addAll(
-                new FileChooser.ExtensionFilter("Image Files", "*.bmp", "*.gif", "*.jpeg", "*.png", "*.jpg", "*.jpe" ));
-        File selectedFile = fileChooser.showOpenDialog(null);
-        uploadFile = selectedFile.getPath();
-        if (selectedFile != null) {
-            try {
-                FileInputStream inputStream = new FileInputStream(uploadFile);
-                Image imageFX = new Image(inputStream);
-                imageView.setImage(imageFX);
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            }
-            init();
+    public void upload() {
+        //Command design pattern
+        UploadCommand command = new UploadCommand(imageView);
+        command.execute();
+        uploadFile = command.getUploadFile();
+        init();
+    }
+    /**
+     * initialize image, imageProperty, and modification
+     */
+    private void init() {
+        if (uploadFile != null) {
+            image = new javaxt.io.Image(uploadFile);
+            imageProperty = new ImageProperty(uploadFile);
+            displayProperty();
+            modification = new ImageModification(image);
         }
     }
-    //initializing variables: image, imageProperty, and modification
-    private void init() {
-        image = new javaxt.io.Image(uploadFile);
-        imageProperty = new ImageProperty(uploadFile);
-        displayProperty();
-        modification = new ImageModification(image);
-    }
+
+    /**
+     * The following 9 functions, from "bmp()" to "wbmp()", are in response to respective radio buttons.
+     * Their job is to convert the image format.
+     */
     @FXML
     public void bmp() {
-        imageProperty.setFormat("bmp");
+        if (checkStatus(imageProperty)) {
+            imageProperty.setFormat("bmp");
+        }
     }
     public void gif() {
-        imageProperty.setFormat("gif");
+        if (checkStatus(imageProperty)) {
+            imageProperty.setFormat("gif");
+        }
     }
     public void jpe() {
-        imageProperty.setFormat("jpe");
+        if (checkStatus(imageProperty)) {
+            imageProperty.setFormat("jpe");
+        }
     }
     public void jpeg() {
-        imageProperty.setFormat("jpeg");
+        if (checkStatus(imageProperty)) {
+            imageProperty.setFormat("jpeg");
+        }
     }
     public void jpg() {
-        imageProperty.setFormat("jpg");
+        if (checkStatus(imageProperty)) {
+            imageProperty.setFormat("jpg");
+        }
     }
     public void png() {
-        imageProperty.setFormat("png");
+        if (checkStatus(imageProperty)) {
+            imageProperty.setFormat("png");
+        }
     }
     public void tif() {
-        imageProperty.setFormat("tif");
+        if (checkStatus(imageProperty)) {
+            imageProperty.setFormat("tif");
+        }
     }
     public void tiff() {
-        imageProperty.setFormat("tiff");
+        if (checkStatus(imageProperty)) {
+            imageProperty.setFormat("tiff");
+        }
     }
     public void wbmp() {
-        imageProperty.setFormat("wbmp");
-    }
-    @FXML
-    public void save() {
-        FileChooser fileChooser = new FileChooser();
-        File outFile = fileChooser.showSaveDialog(null);
-        String outPath = outFile.getAbsolutePath();
-        String out = outPath + "." + imageProperty.getFormat();
-        image.saveAs(out);
+        if (checkStatus(imageProperty)) {
+            imageProperty.setFormat("wbmp");
+        }
     }
 
+    /**
+     * In response to "Save Image" button: save the image to selected location.
+     */
+    @FXML
+    public void save() {
+        //Command design pattern
+        if (checkStatus(image)) {
+            Command command = new SaveCommand(image, imageProperty.getFormat());
+            command.execute();
+        }
+    }
+
+    /**
+     * Display image properties on the user interface: width, height, date, camera,manufacturer,
+     * focal length, exposure time, and ISO speed ratings.
+     */
     private void displayProperty() {
-        Text[] properties = new Text[] {widthProperty, heightProperty, date, camera, manufacturer, focalLength, exposureTime, ISOSpeedRatings};
-        imageProperty.displayProperty(properties);
+        Text[] properties = new Text[] {widthProperty, heightProperty, date, camera, manufacturer,
+                focalLength, exposureTime, ISOSpeedRatings};
+        if (checkStatus(imageProperty)) {
+            imageProperty.displayProperty(properties);
+        }
     }
+
+    /**
+     * In response to the "Resize" button: resize the image to the designated size.
+     */
     @FXML
-    private void resize() {
-        modification.resize(width, height);
-        refreshImage();
+    public void resize() {
+        if (checkStatus(modification)) {
+            modification.resize(width, height);
+            refreshImage();
+        }
     }
+
+    /**
+     * In response to the "Rotate" button: rotate the image by the input degrees.
+     */
     @FXML
-    private void rotate() {
-        modification.rotate(degrees);
-        refreshImage();
+    public void rotate() {
+        if (checkStatus(modification)) {
+            modification.rotate(degrees);
+            refreshImage();
+        }
     }
+
+    /**
+     * In response to the "Gray" button: gray the image by the input percent.
+     */
     @FXML
-    private void gray() {
-        modification.gray(grayPercent);
-        refreshImage();
+    public void gray() {
+        if (checkStatus(modification)) {
+            modification.gray(grayPercent);
+            refreshImage();
+        }
     }
+
+    /**
+     * In response to the "Crop" button: crop the image according to input parameters.
+     */
     @FXML
-    private void crop() {
-        modification.crop(offsetX, offsetY, newWidth, newHeight);
-        refreshImage();
+    public void crop() {
+        if (checkStatus(modification)) {
+            modification.crop(offsetX, offsetY, newWidth, newHeight);
+            refreshImage();
+        }
     }
-    //refresh image after each modification so that users know their modification took effect.
+    /**
+     * Refresh image after each modification so that users know their modification took effect.
+     */
     private void refreshImage() {
-        try {
-            image.saveAs("TempImage/temp." + imageProperty.getFormat());
-            FileInputStream inputStream = new FileInputStream("TempImage/temp." + imageProperty.getFormat());
-            Image imageFX = new Image(inputStream);
-            imageView.setImage(imageFX);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
+        ByteArrayInputStream input = new ByteArrayInputStream(image.getByteArray());
+        Image imageFX = new Image(input);
+        imageView.setImage(imageFX);
+    }
+    /**
+     * Check if the object O is initialized;
+     * @param o: the object to be checked;
+     * @return true if initialized, else false.
+     */
+    private boolean checkStatus(Object o) {
+        if (o == null) {
+            AlertDialogue.showWarning("Please upload image first!");
+            return false;
+        } else {
+            return true;
         }
     }
 }
