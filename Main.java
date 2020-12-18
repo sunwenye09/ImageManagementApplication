@@ -6,6 +6,9 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
+/**
+ * This is the entry point of the "image management tool" application.
+ */
 public class Main extends Application {
 
     @Override

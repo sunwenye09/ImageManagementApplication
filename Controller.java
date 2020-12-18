@@ -33,7 +33,7 @@ public class Controller {
         init();
     }
     /**
-     * initialize image, imageProperty, and modification
+     * Initialize image, imageProperty, and modification. Display image properties.
      */
     private void init() {
         if (uploadFile != null) {
@@ -45,8 +45,8 @@ public class Controller {
     }
 
     /**
-     * The following 9 functions, from "bmp()" to "wbmp()", are in response to respective radio buttons.
-     * Their job is to convert the image format.
+     * The following 8 functions, from "bmp()" to "tiff()", are in response to respective radio buttons.
+     * Their job is to convert the image to selected format.
      */
     @FXML
     public void bmp() {
@@ -89,11 +89,6 @@ public class Controller {
             imageProperty.setFormat("tiff");
         }
     }
-    public void wbmp() {
-        if (checkStatus(imageProperty)) {
-            imageProperty.setFormat("wbmp");
-        }
-    }
 
     /**
      * In response to "Save Image" button: save the image to selected location.
@@ -108,7 +103,7 @@ public class Controller {
     }
 
     /**
-     * Display image properties on the user interface: width, height, date, camera,manufacturer,
+     * Display image properties on the user interface: width, height, date, camera, manufacturer,
      * focal length, exposure time, and ISO speed ratings.
      */
     private void displayProperty() {
@@ -166,14 +161,14 @@ public class Controller {
      * Refresh image after each modification so that users know their modification took effect.
      */
     private void refreshImage() {
-        ByteArrayInputStream input = new ByteArrayInputStream(image.getByteArray());
+        ByteArrayInputStream input = new ByteArrayInputStream(image.getByteArray(imageProperty.getFormat()));
         Image imageFX = new Image(input);
         imageView.setImage(imageFX);
     }
     /**
      * Check if the object O is initialized;
      * @param o: the object to be checked;
-     * @return true if initialized, else false.
+     * @return true if initialized, otherwise false.
      */
     private boolean checkStatus(Object o) {
         if (o == null) {

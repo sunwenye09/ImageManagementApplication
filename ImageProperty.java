@@ -11,6 +11,7 @@ public class ImageProperty {
     private Image image;
     private String format;
     private HashMap<Integer, Object> exif;
+
     public ImageProperty(String file) {
         image = new javaxt.io.Image(file);
         int index = file.lastIndexOf('.');
@@ -26,7 +27,22 @@ public class ImageProperty {
     }
 
     /**
-     * retrieve the corresponding image information.
+     * Display image properties on the graphical user interface.
+     * @param properties: a list of JavaFX Texts which are used to display image properties.
+     */
+    public void displayProperty(Text[] properties) {
+        for (int i = 0; i < properties.length; i++) {
+            String property = getProperty(properties[i]);
+            if (property.equalsIgnoreCase("null")) {
+                properties[i].setText("No Info");
+            } else {
+                properties[i].setText(property);
+            }
+        }
+    }
+
+    /**
+     * Retrieve the corresponding image information.
      * @param text: JavaFX Text which is used to display one of the image properties.
      * @return the corresponding image information in string format
      */
@@ -51,21 +67,6 @@ public class ImageProperty {
         } else {
             System.out.println("Undefined image property: " + id);
             return null;
-        }
-    }
-
-    /**
-     * display image properties on the graphical user interface.
-     * @param properties: a list of JavaFX Texts which are used to display image properties.
-     */
-    public void displayProperty(Text[] properties) {
-        for (int i = 0; i < properties.length; i++) {
-            String property = getProperty(properties[i]);
-            if (property.equalsIgnoreCase("null")) {
-                properties[i].setText("No Info");
-            } else {
-                properties[i].setText(property);
-            }
         }
     }
 }

@@ -21,7 +21,7 @@ public class UploadCommand implements Command{
     }
 
     /**
-     * execute the upload image command.
+     * This function is to execute the "upload image" command.
      */
     @Override
     public void execute() {

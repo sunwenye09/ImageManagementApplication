@@ -5,7 +5,7 @@ import java.io.File;
 
 /**
  * SaveCommand class is mainly responsible for executing the "save image" command;
- * Supported formats are: bmp, gif, jpe, jpeg, png, jpg, tif, tiff, and wbmp.
+ * Supported formats are: bmp, gif, jpe, jpeg, png, jpg, tif, and tiff.
  */
 public class SaveCommand implements Command{
     private javaxt.io.Image image;
@@ -17,7 +17,7 @@ public class SaveCommand implements Command{
     }
 
     /**
-     * execute the save image command.
+     * This function is to execute the save image command.
      */
     @Override
     public void execute() {
@@ -26,6 +26,12 @@ public class SaveCommand implements Command{
         if (outFile != null) {
             String outPath = outFile.getAbsolutePath();
             String out = outPath + "." + format;
+            /* "bmp" can't be converted from some of other formats, so convert the image to "jpg" first
+             * to ensure successful conversion to "bmp" format.
+             */
+            if (format.equalsIgnoreCase("bmp")) {
+                image = new javaxt.io.Image(image.getByteArray("jpg"));
+            }
             image.saveAs(out);
         }
     }
