@@ -1,5 +1,5 @@
 # ImageModificationTool
-This image modificatio tool allows users to:
+This image modification tool allows users to:
 (1) upload image file from desktop;
 (2) show image properties;
 (3) convert image to various formats: bmp, gif, jpe, jpeg, png, jpg, tif, and tiff;
