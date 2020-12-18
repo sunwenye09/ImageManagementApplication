@@ -10,3 +10,6 @@ This image modification tool allows users to:
 (8) download modified image.
 
 ImageIO is needed to run this application.
+(9) Main.java is the entry point of this app.
+(10) GUI.fxml is for building the user interface.
+(11) Controller.java is at the core position to receive user commands and invoke other functionalities.
